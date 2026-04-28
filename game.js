@@ -16,7 +16,7 @@ function setup() {
 }
 
 function draw() {
-    background('red');
+    background('cyan');
     move();
 }
 
