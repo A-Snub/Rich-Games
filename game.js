@@ -76,13 +76,16 @@ function movePeeps(snapshot) {
     console.log("Me is " + myName)
     for (name of Object.keys(data)) {
         //if (name != myName) {
-            if (Object.keys(peeps).includes(name)) {
+        if (name == myName) {
+                peeps[name].chat = data[name].chat;
+        }else{
+               if (Object.keys(peeps).includes(name)) {
                 peeps[name].x = data[name].x;
                 peeps[name].y = data[name].y;
                 peeps[name].chat = data[name].chat;
             } else if (name != myName) {
                 peeps[name] = new Sprite(data[name].x, data[name].y, 50, 'n')
             }
-        //}
+        }
     }
 }
