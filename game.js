@@ -10,7 +10,7 @@ function setup() {
 
     let cnv = new createCanvas(windowWidth, windowHeight);
     console.log("Game Setup")
-    me = new Sprite(width / 2, height / 2, 50, 'n')
+    peeps[myName] = new Sprite(width / 2, height / 2, 50, 'n')
     firebase.database().ref('/players/').on('value', movePeeps)
     firebase.database().ref('/players/' + myName).onDisconnect().remove();
 }
@@ -31,8 +31,8 @@ function scream(){
     console.log(gabagool.value);
     firebase.database().ref('/players/' + myName).set(
                 {
-                    x: me.x,
-                    y: me.y,
+                    x: peeps[myName].x,
+                    y: peeps[myName].y,
                     chat: gabagool.value 
                 }
             )
@@ -40,19 +40,19 @@ function scream(){
 function move() {
     //Player 1 Arrow Key Rotation
     if (kb.pressing('left')) {
-        me.x -= 1;
+        peeps[myName].x -= 1;
     }
     if (kb.pressing('right')) {
-        me.x += 1;
+        peeps[myName].x += 1;
     }
     if (kb.pressing('up')) {
-        me.y -= 1;
+        peeps[myName].y -= 1;
     }
     if (kb.pressing('down')) {
-        me.y += 1;
+        peeps[myName].y += 1;
     }
     if (frameCount % 5 == 0) {
-        if (oldPos[0] == me.x && oldPos[1] == me.y) {
+        if (oldPos[0] == peeps[myName].x && oldPos[1] == peeps[myName].y) {
             //Nochange
 
         } else {
@@ -60,13 +60,13 @@ function move() {
             // Write
             firebase.database().ref('/players/' + myName).update(
                 {
-                    x: me.x,
-                    y: me.y
+                    x: peeps[myName].x,
+                    y: peeps[myName].y
                 }
             )
             console.log(frameCount)
-            oldPos[0] = me.x
-            oldPos[1] = me.y
+            oldPos[0] = peeps[myName].x
+            oldPos[1] = peeps[myName].y
         }
     }
 }
@@ -80,7 +80,7 @@ function movePeeps(snapshot) {
                 peeps[name].x = data[name].x;
                 peeps[name].y = data[name].y;
                 peeps[name].chat = data[name].chat;
-            } else {
+            } else if (name != myName) {
                 peeps[name] = new Sprite(data[name].x, data[name].y, 50, 'n')
             }
         //}
