@@ -16,10 +16,27 @@ function setup() {
 }
 
 function draw() {
-    background('cyan');
+    background('green');
     move();
+    drawchat();
 }
-
+function drawchat(){
+    for (peep of Object.keys(peeps)){
+        text(peeps[peep].chat,peeps[peep].x,peeps[peep].y - 30)
+        textAlign(CENTER)
+    }
+}
+function scream(){
+    console.log("AAAAAAAA");
+    console.log(gabagool.value);
+    firebase.database().ref('/players/' + myName).set(
+                {
+                    x: me.x,
+                    y: me.y,
+                    chat: gabagool.value 
+                }
+            )
+}
 function move() {
     //Player 1 Arrow Key Rotation
     if (kb.pressing('left')) {
@@ -34,14 +51,14 @@ function move() {
     if (kb.pressing('down')) {
         me.y += 1;
     }
-    if (frameCount % 1 == 0) {
+    if (frameCount % 5 == 0) {
         if (oldPos[0] == me.x && oldPos[1] == me.y) {
             //Nochange
 
         } else {
             //changed
             // Write
-            firebase.database().ref('/players/' + myName).set(
+            firebase.database().ref('/players/' + myName).update(
                 {
                     x: me.x,
                     y: me.y
@@ -58,13 +75,14 @@ function movePeeps(snapshot) {
     data = snapshot.val()
     console.log("Me is " + myName)
     for (name of Object.keys(data)) {
-        if (name != myName) {
+        //if (name != myName) {
             if (Object.keys(peeps).includes(name)) {
                 peeps[name].x = data[name].x;
                 peeps[name].y = data[name].y;
+                peeps[name].chat = data[name].chat;
             } else {
                 peeps[name] = new Sprite(data[name].x, data[name].y, 50, 'n')
             }
-        }
+        //}
     }
 }
